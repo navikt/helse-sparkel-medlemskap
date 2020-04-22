@@ -44,6 +44,8 @@ internal class Medlemskap(
                 håndter(packet, context)
             } catch (err: Exception) {
                 packet.error("feil ved behov {} for {}: ${err.message}", keyValue("id", behovId), keyValue("vedtaksperiodeId", vedtaksperiodeId), err)
+
+                packet["@løsning"] = mapOf<String, Any>(behov to emptyMap<String, Any>())
             }
         }
     }
