@@ -44,8 +44,11 @@ internal class Medlemskap(
                 håndter(packet, context)
             } catch (err: Exception) {
                 packet.error("feil ved behov {} for {}: ${err.message}", keyValue("id", behovId), keyValue("vedtaksperiodeId", vedtaksperiodeId), err)
-
                 packet["@løsning"] = mapOf<String, Any>(behov to emptyMap<String, Any>())
+            }
+
+            context.send(packet.toJson()).also {
+                sikkerlogg.info("sender {} som {}", keyValue("id", packet["@id"].asText()), packet.toJson())
             }
         }
     }
@@ -59,9 +62,6 @@ internal class Medlemskap(
                 arbeidUtenforNorge = false
             )
         )
-        context.send(packet.toJson()).also {
-            sikkerlogg.info("sender {} som {}", keyValue("id", packet["@id"].asText()), packet.toJson())
-        }
     }
 
     private fun withMDC(context: Map<String, String>, block: () -> Unit) {
