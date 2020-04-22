@@ -9,8 +9,8 @@ fun main() {
     RapidApplication.create(env).apply {
         val client = MedlemskapClient("http://medlemskap-oppslag.default.svc.nais.local", AzureClient(
             tenantUrl = "${env.getValue("AZURE_TENANT_BASEURL")}/${env.getValue("AZURE_TENANT_ID")}",
-            clientId = "/var/run/secrets/nais.io/azure/client_id".readFile() ?: env.getValue("AZURE_CLIENT_ID"),
-            clientSecret = "/var/run/secrets/nais.io/azure/client_secret".readFile() ?: env.getValue("AZURE_CLIENT_SECRET")
+            clientId = "/var/run/secrets/nais.io/azuread/client_id".readFile() ?: env.getValue("AZURE_CLIENT_ID"),
+            clientSecret = "/var/run/secrets/nais.io/azuread/client_secret".readFile() ?: env.getValue("AZURE_CLIENT_SECRET")
         ), env.getValue("MEDLEMSKAP_SCOPE"))
         Medlemskap(this, client)
     }.start()
