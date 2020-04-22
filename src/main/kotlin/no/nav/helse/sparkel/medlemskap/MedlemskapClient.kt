@@ -29,6 +29,7 @@ class MedlemskapClient(
 
             setRequestProperty("Authorization", "Bearer ${azureClient.getToken(accesstokenScope).accessToken}")
             setRequestProperty("Accept", "application/json")
+            setRequestProperty("Content-Type", "application/json")
             doOutput = true
             outputStream.bufferedWriter().apply {
                 write("""{"fnr": "$fnr", "periode": {"fom": "$fom", "tom": "$tom" } }""")
