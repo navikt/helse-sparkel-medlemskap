@@ -31,9 +31,11 @@ class MedlemskapClient(
             setRequestProperty("Accept", "application/json")
             setRequestProperty("Content-Type", "application/json")
             doOutput = true
-            outputStream.bufferedWriter().apply {
-                write("""{"fnr": "$fnr", "periode": {"fom": "$fom", "tom": "$tom" } }""")
-                flush()
+            outputStream.use {
+                it.bufferedWriter().apply {
+                    write("""{"fnr": "$fnr", "periode": {"fom": "$fom", "tom": "$tom" }, "brukerinput": {} }""")
+                    flush()
+                }
             }
 
             val stream: InputStream? = if (responseCode < 300) this.inputStream else this.errorStream
