@@ -1,0 +1,53 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: {{app}}
+  namespace: default
+  labels:
+    team: {{team}}
+spec:
+  image: {{image}}:{{tag}}
+  port: 8080
+  liveness:
+    path: isalive
+    initialDelay: 10
+  readiness:
+    path: isready
+    initialDelay: 10
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 512Mi
+    requests:
+      cpu: 200m
+      memory: 128Mi
+  replicas:
+    min: 1
+    max: 6
+    cpuThresholdPercentage: 75
+  prometheus:
+    enabled: true
+    path: /metrics
+  webproxy: true
+  secureLogs:
+    enabled: true
+  vault:
+    enabled: true
+    paths:
+      - mountPath: /var/run/secrets/nais.io/azure
+        kvPath: /azuread/data/prod/creds/sparkel-medlemskap
+      - mountPath: /var/run/secrets/nais.io/service_user
+        kvPath: /serviceuser/data/prod/srvsparkelmedlemskap
+  env:
+  - name: KAFKA_BOOTSTRAP_SERVERS
+    value: a01apvl00145.adeo.no:8443,a01apvl00146.adeo.no:8443,a01apvl00147.adeo.no:8443,a01apvl00148.adeo.no:8443,a01apvl00149.adeo.no:8443,a01apvl00150.adeo.no:8443
+  - name: KAFKA_CONSUMER_GROUP_ID
+    value: sparkel-medlemskap-v1
+  - name: KAFKA_RAPID_TOPIC
+    value: helse-rapid-v1
+  - name: AZURE_TENANT_ID
+    value: 62366534-1ec3-4962-8869-9b5535279d0b
+  - name: AZURE_TENANT_BASEURL
+    value: https://login.microsoftonline.com
+  - name: MEDLEMSKAP_SCOPE
+    value: api://3a3be6ae-421a-40ff-8c8b-32df13d179bd/.default
