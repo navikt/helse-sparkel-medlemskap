@@ -22,7 +22,8 @@ class MedlemskapClient(
     internal fun hentMedlemskapsvurdering(
         fnr: String,
         fom: LocalDate,
-        tom: LocalDate
+        tom: LocalDate,
+        arbeidUtenforNorge: Boolean
     ): JsonNode {
         val (responseCode, responseBody) = with(URL(baseUrl).openConnection() as HttpURLConnection) {
             requestMethod = "POST"
@@ -33,7 +34,7 @@ class MedlemskapClient(
             doOutput = true
             outputStream.use {
                 it.bufferedWriter().apply {
-                    write("""{"fnr": "$fnr", "periode": {"fom": "$fom", "tom": "$tom" }, "brukerinput": {} }""")
+                    write("""{"fnr": "$fnr", "periode": {"fom": "$fom", "tom": "$tom" }, "brukerinput": { "arbeidUtenforNorge": ${ if (arbeidUtenforNorge) "true" else "false" } } }""")
                     flush()
                 }
             }

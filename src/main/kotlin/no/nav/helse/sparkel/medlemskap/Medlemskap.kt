@@ -50,7 +50,12 @@ internal class Medlemskap(
 
     private fun håndter(packet: JsonMessage, context: RapidsConnection.MessageContext) {
         packet["@løsning"] = mapOf<String, Any>(
-            behov to client.hentMedlemskapsvurdering(packet["fødselsnummer"].asText(), packet["medlemskapPeriodeFom"].asLocalDate(), packet["medlemskapPeriodeTom"].asLocalDate())
+            behov to client.hentMedlemskapsvurdering(
+                fnr = packet["fødselsnummer"].asText(),
+                fom = packet["medlemskapPeriodeFom"].asLocalDate(),
+                tom = packet["medlemskapPeriodeTom"].asLocalDate(),
+                arbeidUtenforNorge = false
+            )
         )
         context.send(packet.toJson()).also {
             sikkerlogg.info("sender {} som {}", keyValue("id", packet["@id"].asText()), packet.toJson())
