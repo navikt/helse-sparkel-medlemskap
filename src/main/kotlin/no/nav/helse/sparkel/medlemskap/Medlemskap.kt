@@ -26,8 +26,8 @@ internal class Medlemskap(
             validate { it.requireKey("@id") }
             validate { it.requireKey("fødselsnummer") }
             validate { it.requireKey("vedtaksperiodeId") }
-            validate { it.require("periodeFom", JsonNode::asLocalDate) }
-            validate { it.require("periodeTom", JsonNode::asLocalDate) }
+            validate { it.require("medlemskapPeriodeFom", JsonNode::asLocalDate) }
+            validate { it.require("medlemskapPeriodeTom", JsonNode::asLocalDate) }
         }.register(this)
     }
 
@@ -49,7 +49,7 @@ internal class Medlemskap(
 
     private fun håndter(packet: JsonMessage, context: RapidsConnection.MessageContext) {
         packet["@løsning"] = mapOf<String, Any>(
-            behov to client.hentMedlemskapsvurdering(packet["fødselsnummer"].asText(), packet["periodeFom"].asLocalDate(), packet["periodeTom"].asLocalDate())
+            behov to client.hentMedlemskapsvurdering(packet["fødselsnummer"].asText(), packet["medlemskapPeriodeFom"].asLocalDate(), packet["medlemskapPeriodeTom"].asLocalDate())
         )
         context.send(packet.toJson()).also {
             sikkerlogg.info("sender {} som {}", keyValue("id", packet["@id"].asText()), packet.toJson())
