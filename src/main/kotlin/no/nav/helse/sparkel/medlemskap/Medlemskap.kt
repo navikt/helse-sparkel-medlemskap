@@ -42,13 +42,11 @@ internal class Medlemskap(
             try {
                 packet.info("løser behov {} for {}", keyValue("id", behovId), keyValue("vedtaksperiodeId", vedtaksperiodeId))
                 håndter(packet, context)
+                context.send(packet.toJson()).also {
+                    sikkerlogg.info("sender {} som {}", keyValue("id", packet["@id"].asText()), packet.toJson())
+                }
             } catch (err: Exception) {
                 packet.error("feil ved behov {} for {}: ${err.message}", keyValue("id", behovId), keyValue("vedtaksperiodeId", vedtaksperiodeId), err)
-                packet["@løsning"] = mapOf<String, Any>(behov to emptyMap<String, Any>())
-            }
-
-            context.send(packet.toJson()).also {
-                sikkerlogg.info("sender {} som {}", keyValue("id", packet["@id"].asText()), packet.toJson())
             }
         }
     }
