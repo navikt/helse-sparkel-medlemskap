@@ -8,13 +8,13 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.time.LocalDate
 
-class MedlemskapClient(
+internal class MedlemskapClient(
     private val baseUrl: String,
     private val azureClient: AzureClient,
     private val accesstokenScope: String = "??"
 ) {
 
-    companion object {
+    private companion object {
         private val objectMapper = ObjectMapper()
         private val tjenestekallLog = LoggerFactory.getLogger("tjenestekall")
     }
@@ -46,10 +46,12 @@ class MedlemskapClient(
         tjenestekallLog.info("svar fra medlemskap: url=$baseUrl responseCode=$responseCode responseBody=$responseBody")
 
         if (responseCode >= 300 || responseBody == null) {
-            throw RuntimeException("unknown error (responseCode=$responseCode) from medlemskap")
+            throw MedlemskapException("unknown error (responseCode=$responseCode) from medlemskap", responseCode, responseBody)
         }
 
         return objectMapper.readTree(responseBody)
     }
 }
+
+internal class MedlemskapException(message: String, val statusCode: Int, val responseBody: String?) : RuntimeException(message)
 

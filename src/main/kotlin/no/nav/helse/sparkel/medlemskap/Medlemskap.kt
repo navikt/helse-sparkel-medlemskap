@@ -42,20 +42,23 @@ internal class Medlemskap(
             try {
                 packet.info("løser behov {} for {}", keyValue("id", behovId), keyValue("vedtaksperiodeId", vedtaksperiodeId))
                 håndter(packet, context)
-                context.send(packet.toJson()).also {
-                    sikkerlogg.info("sender {} som {}", keyValue("id", packet["@id"].asText()), packet.toJson())
-                }
+            } catch (err: MedlemskapException) {
+                log.error("feil ved behov {} for {}: ${err.message}", keyValue("id", behovId), keyValue("vedtaksperiodeId", vedtaksperiodeId), err)
+                sikkerlogg.error("feil ved behov {} for {}: ${err.message}\n\t${err.responseBody}", keyValue("id", behovId), keyValue("vedtaksperiodeId", vedtaksperiodeId), err)
+                håndterFeil(packet, context)
             } catch (err: Exception) {
                 packet.error("feil ved behov {} for {}: ${err.message}", keyValue("id", behovId), keyValue("vedtaksperiodeId", vedtaksperiodeId), err)
-
-                if ("dev-fss" == System.getenv("NAIS_CLUSTER_NAME")) {
-                    packet["@løsning"] = mapOf<String, Any>(behov to emptyMap<String, Any>())
-                    context.send(packet.toJson()).also {
-                        sikkerlogg.info("sender {} som {}", keyValue("id", packet["@id"].asText()), packet.toJson())
-                    }
-                }
+                håndterFeil(packet, context)
             }
+        }
+    }
 
+    private fun håndterFeil(packet: JsonMessage, context: RapidsConnection.MessageContext) {
+        if ("dev-fss" != System.getenv("NAIS_CLUSTER_NAME")) return
+
+        packet["@løsning"] = mapOf<String, Any>(behov to emptyMap<String, Any>())
+        context.send(packet.toJson()).also {
+            sikkerlogg.info("sender {} som {}", keyValue("id", packet["@id"].asText()), packet.toJson())
         }
     }
 
@@ -68,6 +71,9 @@ internal class Medlemskap(
                 arbeidUtenforNorge = false
             )
         )
+        context.send(packet.toJson()).also {
+            sikkerlogg.info("sender {} som {}", keyValue("id", packet["@id"].asText()), packet.toJson())
+        }
     }
 
     private fun withMDC(context: Map<String, String>, block: () -> Unit) {
