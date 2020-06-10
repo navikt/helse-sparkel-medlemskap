@@ -31,6 +31,8 @@ internal class MedlemskapClient(
             setRequestProperty("Authorization", "Bearer ${azureClient.getToken(accesstokenScope).accessToken}")
             setRequestProperty("Accept", "application/json")
             setRequestProperty("Content-Type", "application/json")
+            connectTimeout = 10000
+            readTimeout = 10000
             doOutput = true
             outputStream.use {
                 it.bufferedWriter().apply {

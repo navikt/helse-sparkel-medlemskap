@@ -43,11 +43,11 @@ internal class Medlemskap(
                 packet.info("løser behov {} for {}", keyValue("id", behovId), keyValue("vedtaksperiodeId", vedtaksperiodeId))
                 håndter(packet, context)
             } catch (err: MedlemskapException) {
-                log.error("feil ved behov {} for {}: ${err.message}", keyValue("id", behovId), keyValue("vedtaksperiodeId", vedtaksperiodeId), err)
-                sikkerlogg.error("feil ved behov {} for {}: ${err.message}\n\t${err.responseBody}", keyValue("id", behovId), keyValue("vedtaksperiodeId", vedtaksperiodeId), err)
+                log.warn("feil ved behov {} for {}: ${err.message}", keyValue("id", behovId), keyValue("vedtaksperiodeId", vedtaksperiodeId), err)
+                sikkerlogg.warn("feil ved behov {} for {}: ${err.message}\n\t${err.responseBody}", keyValue("id", behovId), keyValue("vedtaksperiodeId", vedtaksperiodeId), err)
                 håndterFeil(packet, context)
             } catch (err: Exception) {
-                packet.error("feil ved behov {} for {}: ${err.message}", keyValue("id", behovId), keyValue("vedtaksperiodeId", vedtaksperiodeId), err)
+                packet.warn("feil ved behov {} for {}: ${err.message}", keyValue("id", behovId), keyValue("vedtaksperiodeId", vedtaksperiodeId), err)
                 håndterFeil(packet, context)
             }
         }
@@ -91,8 +91,8 @@ internal class Medlemskap(
         sikkerlogg.info(format, *args)
     }
 
-    private fun JsonMessage.error(format: String, vararg args: Any) {
-        log.error(format, *args)
-        sikkerlogg.error(format, *args)
+    private fun JsonMessage.warn(format: String, vararg args: Any) {
+        log.warn(format, *args)
+        sikkerlogg.warn(format, *args)
     }
 }
