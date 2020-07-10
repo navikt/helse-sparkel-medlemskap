@@ -1,5 +1,4 @@
-FROM navikt/java:12
-# prøver java12 på tross av cxf #YOLO
+FROM navikt/java:14
 
 COPY build/libs/*.jar ./
 
