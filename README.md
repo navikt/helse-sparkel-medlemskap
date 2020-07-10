@@ -1,13 +1,13 @@
-Sparkel for Medlemskap [![Actions Status](https://github.com/navikt/helse-sparkel-medlemskap/workflows/master/badge.svg)](https://github.com/navikt/helse-sparkel-medlemskap/actions)
-======================
+# Sparkel for Medlemskap 
+![Bygg og deploy](https://github.com/navikt/helse-sparkel-medlemskap/workflows/Bygg%20og%20deploy/badge.svg)
 
 Løser behov for informasjon om Medlemskap.
 
-# Henvendelser
+## Henvendelser
 
 Spørsmål knyttet til koden eller prosjektet kan stilles som issues her på GitHub.
 
-## For NAV-ansatte
+### For NAV-ansatte
 
 Interne henvendelser kan sendes via Slack i kanalen #område-helse.
 
