@@ -23,8 +23,8 @@ internal class Medlemskap(
             validate { it.requireKey("@id") }
             validate { it.requireKey("fødselsnummer") }
             validate { it.requireKey("vedtaksperiodeId") }
-            validate { it.require("medlemskapPeriodeFom", JsonNode::asLocalDate) }
-            validate { it.require("medlemskapPeriodeTom", JsonNode::asLocalDate) }
+            validate { it.require("$behov.medlemskapPeriodeFom", JsonNode::asLocalDate) }
+            validate { it.require("$behov.medlemskapPeriodeTom", JsonNode::asLocalDate) }
         }.register(this)
     }
 
@@ -66,8 +66,8 @@ internal class Medlemskap(
         packet["@løsning"] = mapOf<String, Any>(
             behov to client.hentMedlemskapsvurdering(
                 fnr = packet["fødselsnummer"].asText(),
-                fom = packet["medlemskapPeriodeFom"].asLocalDate(),
-                tom = packet["medlemskapPeriodeTom"].asLocalDate(),
+                fom = packet["$behov.medlemskapPeriodeFom"].asLocalDate(),
+                tom = packet["$behov.medlemskapPeriodeTom"].asLocalDate(),
                 arbeidUtenforNorge = false
             )
         )
