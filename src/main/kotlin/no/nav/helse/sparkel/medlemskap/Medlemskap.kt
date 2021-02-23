@@ -28,11 +28,11 @@ internal class Medlemskap(
         }.register(this)
     }
 
-    override fun onError(problems: MessageProblems, context: RapidsConnection.MessageContext) {
+    override fun onError(problems: MessageProblems, context: MessageContext) {
         sikkerlogg.error("forstod ikke $behov:\n${problems.toExtendedReport()}")
     }
 
-    override fun onPacket(packet: JsonMessage, context: RapidsConnection.MessageContext) {
+    override fun onPacket(packet: JsonMessage, context: MessageContext) {
         val behovId = packet["@id"].asText()
         val vedtaksperiodeId = packet["vedtaksperiodeId"].asText()
         withMDC(mapOf(
@@ -53,16 +53,16 @@ internal class Medlemskap(
         }
     }
 
-    private fun håndterFeil(packet: JsonMessage, context: RapidsConnection.MessageContext) {
+    private fun håndterFeil(packet: JsonMessage, context: MessageContext) {
         if ("dev-fss" != System.getenv("NAIS_CLUSTER_NAME")) return
 
         packet["@løsning"] = mapOf<String, Any>(behov to emptyMap<String, Any>())
-        context.send(packet.toJson()).also {
+        context.publish(packet.toJson()).also {
             sikkerlogg.info("sender {} som {}", keyValue("id", packet["@id"].asText()), packet.toJson())
         }
     }
 
-    private fun håndter(packet: JsonMessage, context: RapidsConnection.MessageContext) {
+    private fun håndter(packet: JsonMessage, context: MessageContext) {
         packet["@løsning"] = mapOf<String, Any>(
             behov to client.hentMedlemskapsvurdering(
                 fnr = packet["fødselsnummer"].asText(),
@@ -71,7 +71,7 @@ internal class Medlemskap(
                 arbeidUtenforNorge = false
             )
         )
-        context.send(packet.toJson()).also {
+        context.publish(packet.toJson()).also {
             sikkerlogg.info("sender {} som {}", keyValue("id", packet["@id"].asText()), packet.toJson())
         }
     }
