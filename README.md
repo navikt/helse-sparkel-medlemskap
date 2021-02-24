@@ -1,3 +1,5 @@
+# [Flyttet til monorepo](https://github.com/navikt/helse-sparkelapper/)
+
 # Sparkel for Medlemskap 
 ![Bygg og deploy](https://github.com/navikt/helse-sparkel-medlemskap/workflows/Bygg%20og%20deploy/badge.svg)
 
